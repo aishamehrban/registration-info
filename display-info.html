@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Information</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f3fe;
+            text-align: center;
+            padding: 5vw;
+            margin: 0;
+        }
+
+        h2 {
+            color: #0a1551;
+            font-size: 6vw;
+            margin-bottom: 2vh;
+        }
+
+        p {
+            color: #666;
+            font-size: 4.5vw;
+            margin: 1vh 0;
+        }
+
+        .info {
+            margin-top: 4vh;
+            font-size: 4.8vw;
+            color: #0a1551;
+        }
+
+        @media (min-width: 600px) {
+            h2 {
+                font-size: 28px;
+            }
+
+            p, .info {
+                font-size: 18px;
+            }
+
+            body {
+                padding: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Registration Information</h2>
+    <div class="info">
+        <p><strong>Name:</strong> <span id="name"></span></p>
+        <p><strong>Email:</strong> <span id="email"></span></p>
+    </div>
+
+    <script>
+        // Get query parameters from URL
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Try common keys
+        const name = urlParams.get('name') || 'Not Provided';
+        const email = urlParams.get('email') || urlParams.get('studentEmail6') || 'Not Provided';
+
+        // Display the values
+        document.getElementById('name').textContent = name;
+        document.getElementById('email').textContent = email;
+
+        // Optional: log all params (for debugging)
+        // console.log('URL Params:', Array.from(urlParams.entries()));
+    </script>
+
+</body>
+</html>
