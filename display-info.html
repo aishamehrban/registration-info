@@ -64,11 +64,11 @@
 
         // Try common keys
         const name = urlParams.get('name') || 'Not Provided';
-        const email = urlParams.get('email') || urlParams.get('studentEmail6') || 'Not Provided';
+        const email = urlParams.get('studentEmail6') || urlParams.get('studentEmail6') || 'Not Provided';
 
         // Display the values
         document.getElementById('name').textContent = name;
-        document.getElementById('email').textContent = email;
+        document.getElementById('studentEmail6').textContent = email;
 
         // Optional: log all params (for debugging)
         // console.log('URL Params:', Array.from(urlParams.entries()));
@@ -76,4 +76,5 @@
 
 </body>
 </html>
+
 
