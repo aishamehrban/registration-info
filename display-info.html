@@ -5,19 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Registration Info</title>
 <style>
-    body { font-family: Arial, sans-serif; text-align: center; padding: 5vw; margin: 0; }
-    h2 { color: #0a1551; font-size: 6vw; margin-bottom: 2vh; }
-    p { color: #444; font-size: 4.5vw; margin: 1vh 0; }
-    .info { margin-top: 4vh; font-size: 4.8vw; color: #0a1551; }
-    #qrcode { margin-top: 5vh; display: flex; justify-content: center; }
-    .tag { display: inline-block; padding: 6px 12px; border-radius: 12px; font-weight: bold; color: white; margin-top: 8px; }
-    .tag.student { background-color: #007bff; }
-    .tag.alumni { background-color: #ff7a00; }
-    .tag.staff { background-color: #28a745; }
-    .tag.family { background-color: #c63dc6; }
-    #downloadBtn { margin-top: 20px; padding: 10px 20px; font-size: 16px; font-weight: bold; background-color: #0a1551; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    #downloadBtn:hover { background-color: #1a2a6c; }
-    @media (min-width: 600px) { h2 { font-size: 28px; } p, .info { font-size: 18px; } body { padding: 40px; } }
+body { font-family: Arial, sans-serif; text-align: center; padding: 5vw; margin: 0; background-color:#f3f3fe; }
+h2 { color: #0a1551; font-size: 6vw; margin-bottom: 2vh; }
+p { color: #444; font-size: 4.5vw; margin: 1vh 0; }
+.info { margin-top: 4vh; font-size: 4.8vw; color: #0a1551; }
+#qrcode { margin-top: 5vh; display: flex; justify-content: center; }
+.tag { display: inline-block; padding: 6px 12px; border-radius: 12px; font-weight: bold; color: white; margin-top: 8px; }
+.tag.student { background-color: #007bff; }
+.tag.alumni { background-color: #ff7a00; }
+.tag.staff { background-color: #28a745; }
+.tag.family { background-color: #c63dc6; }
+#downloadBtn { margin-top: 20px; padding: 10px 20px; font-size: 16px; font-weight: bold; background-color: #0a1551; color: white; border: none; border-radius: 5px; cursor: pointer; }
+#downloadBtn:hover { background-color: #1a2a6c; }
+@media (min-width: 600px) { h2 { font-size: 28px; } p, .info { font-size: 18px; } body { padding: 40px; } }
 </style>
 </head>
 <body>
@@ -35,22 +35,21 @@
 
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
 <script>
+// Read URL parameters
 const params = new URLSearchParams(window.location.search);
-
-// Grab all fields
 const fullName = params.get('fullName') || 'Not Provided';
 const studentEmail = params.get('studentEmail') || '';
 const staffEmail = params.get('staffEmail') || '';
 const qatarId = params.get('qatarId') || '';
 const chooseRaw = params.get('choose') || '';
-const choose = chooseRaw.toLowerCase().trim();
+const choose = chooseRaw.trim().toLowerCase();
 
-// Prepare QR and display values
+// Prepare QR code and display info
 let dataForQR = '';
 let emailForDisplay = '';
 let tagClass = '';
 
-switch(choose) {
+switch(choose){
     case 'student':
         emailForDisplay = studentEmail;
         dataForQR = `${fullName}\n${studentEmail}`;
@@ -66,8 +65,9 @@ switch(choose) {
         dataForQR = `${fullName}\n${staffEmail}`;
         tagClass = 'staff';
         break;
-    case 'friends & family':
-        emailForDisplay = studentEmail || staffEmail || '';
+    case 'family & friends':
+    case 'friends & family':  // handle both possible tags
+        emailForDisplay = params.get('email') || '';
         dataForQR = `${fullName}\n${emailForDisplay}\n${qatarId}`;
         tagClass = 'family';
         break;
@@ -77,17 +77,16 @@ switch(choose) {
         tagClass = '';
 }
 
-// Display info
+// Display values
 document.getElementById('fullName').textContent = fullName;
 document.getElementById('email').textContent = emailForDisplay;
 const chooseElem = document.getElementById('choose');
 chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
 if(tagClass) chooseElem.classList.add(tagClass);
 
-// Generate QR
-let qr = null;
-if(dataForQR.trim() !== '') {
-    qr = new QRCode(document.getElementById("qrcode"), {
+// Generate QR code
+if(dataForQR.trim() !== ''){
+    new QRCode(document.getElementById("qrcode"), {
         text: dataForQR,
         width: 200,
         height: 200
@@ -95,8 +94,7 @@ if(dataForQR.trim() !== '') {
 }
 
 // Download QR
-document.getElementById('downloadBtn').addEventListener('click', function() {
-    if(!qr) return;
+document.getElementById('downloadBtn').addEventListener('click', function(){
     const canvas = document.querySelector('#qrcode canvas');
     if(canvas){
         const link = document.createElement('a');
@@ -109,6 +107,8 @@ document.getElementById('downloadBtn').addEventListener('click', function() {
 
 </body>
 </html>
+
+
 
 
 
