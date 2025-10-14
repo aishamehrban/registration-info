@@ -35,15 +35,17 @@
             color: #0a1551;
         }
 
+        #qrcode {
+            margin-top: 5vh;
+        }
+
         @media (min-width: 600px) {
             h2 {
                 font-size: 28px;
             }
-
             p, .info {
                 font-size: 18px;
             }
-
             body {
                 padding: 40px;
             }
@@ -53,29 +55,50 @@
 <body>
 
     <h2>Registration Information</h2>
+
     <div class="info">
-        <p><strong>Name:</strong> <span id="name"></span></p>
-        <p><strong>Email:</strong> <span id="studentEmail6"></span></p>
+        <p><strong>Full Name:</strong> <span id="fullName"></span></p>
+        <p><strong>Student Email:</strong> <span id="studentEmail"></span></p>
+        <p><strong>Qatar ID:</strong> <span id="qatarId"></span></p>
+        <p><strong>Choose:</strong> <span id="choose"></span></p>
     </div>
 
+    <div id="qrcode"></div>
+
+    <!-- QR Code Generator Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+
     <script>
-        // Get query parameters from URL
-        const urlParams = new URLSearchParams(window.location.search);
+        // Get parameters from URL
+        const params = new URLSearchParams(window.location.search);
 
-        // Try common keys
-        const name = urlParams.get('name') || 'Not Provided';
-        const email = urlParams.get('studentEmail6') || urlParams.get('studentEmail);
+        const fullName = params.get('fullName') || 'Not Provided';
+        const studentEmail = params.get('studentEmail') || 'Not Provided';
+        const qatarId = params.get('qatarId') || 'Not Provided';
+        const choose = params.get('choose') || 'Not Provided';
 
-        // Display the values
-        document.getElementById('name').textContent = name;
-        document.getElementById('studentEmail6').textContent = email;
+        // Display values
+        document.getElementById('fullName').textContent = fullName;
+        document.getElementById('studentEmail').textContent = studentEmail;
+        document.getElementById('qatarId').textContent = qatarId;
+        document.getElementById('choose').textContent = choose;
 
-        // Optional: log all params (for debugging)
-        // console.log('URL Params:', Array.from(urlParams.entries()));
+        // Combine only filled fields for QR
+        let dataForQR = "";
+        if (fullName !== 'Not Provided') dataForQR += fullName + "\n";
+        if (studentEmail !== 'Not Provided') dataForQR += studentEmail + "\n";
+        if (qatarId !== 'Not Provided') dataForQR += qatarId + "\n";
+        if (choose !== 'Not Provided') dataForQR += choose;
+
+        // Generate QR Code only if something is filled
+        if (dataForQR.trim() !== "") {
+            new QRCode(document.getElementById("qrcode"), {
+                text: dataForQR.trim(),
+                width: 200,
+                height: 200
+            });
+        }
     </script>
 
 </body>
 </html>
-
-
-
