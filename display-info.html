@@ -1,104 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Information</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registration Info</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 5vw;
+        margin: 0;
+        transition: background-color 0.3s ease;
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f3f3fe;
-            text-align: center;
-            padding: 5vw;
-            margin: 0;
-        }
+    h2 {
+        color: #0a1551;
+        font-size: 6vw;
+        margin-bottom: 2vh;
+    }
 
-        h2 {
-            color: #0a1551;
-            font-size: 6vw;
-            margin-bottom: 2vh;
-        }
+    p {
+        color: #444;
+        font-size: 4.5vw;
+        margin: 1vh 0;
+    }
 
-        p {
-            color: #666;
-            font-size: 4.5vw;
-            margin: 1vh 0;
-        }
+    .info {
+        margin-top: 4vh;
+        font-size: 4.8vw;
+        color: #0a1551;
+    }
 
-        .info {
-            margin-top: 4vh;
-            font-size: 4.8vw;
-            color: #0a1551;
-        }
+    #qrcode {
+        margin-top: 5vh;
+        display: flex;
+        justify-content: center;
+    }
 
-        #qrcode {
-            margin-top: 5vh;
-        }
+    .tag {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 12px;
+        font-weight: bold;
+        color: white;
+        margin-top: 8px;
+    }
 
-        @media (min-width: 600px) {
-            h2 {
-                font-size: 28px;
-            }
-            p, .info {
-                font-size: 18px;
-            }
-            body {
-                padding: 40px;
-            }
-        }
-    </style>
+    /* Color coordination */
+    .student { background-color: #e9f5ff; }
+    .alumni { background-color: #fff3e6; }
+    .staff { background-color: #f2f8f1; }
+    .family { background-color: #f9e9f9; }
+
+    .tag.student { background-color: #007bff; }
+    .tag.alumni { background-color: #ff7a00; }
+    .tag.staff { background-color: #28a745; }
+    .tag.family { background-color: #c63dc6; }
+
+    #downloadBtn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        background-color: #0a1551;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #downloadBtn:hover {
+        background-color: #1a2a6c;
+    }
+
+    @media (min-width: 600px) {
+        h2 { font-size: 28px; }
+        p, .info { font-size: 18px; }
+        body { padding: 40px; }
+    }
+</style>
 </head>
 <body>
 
-    <h2>Registration Information</h2>
+<h2>Registration Information</h2>
 
-    <div class="info">
-        <p><strong>Full Name:</strong> <span id="fullName"></span></p>
-        <p><strong>Student Email:</strong> <span id="studentEmail"></span></p>
-        <p><strong>Qatar ID:</strong> <span id="qatarId"></span></p>
-        <p><strong>Choose:</strong> <span id="choose"></span></p>
-    </div>
+<div class="info">
+    <p><strong>Full Name:</strong> <span id="fullName"></span></p>
+    <p><strong>Email:</strong> <span id="email"></span></p>
+    <p><strong>Category:</strong> <span id="choose" class="tag"></span></p>
+</div>
 
-    <div id="qrcode"></div>
+<div id="qrcode"></div>
+<button id="downloadBtn">Download QR Code</button>
 
-    <!-- QR Code Generator Library -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+<!-- QR Code Library -->
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+<script>
+    const params = new URLSearchParams(window.location.search);
 
-    <script>
-        // Get parameters from URL
-        const params = new URLSearchParams(window.location.search);
+    const fullName = params.get('fullName') || 'Not Provided';
+    const studentEmail = params.get('studentEmail') || '';
+    const staffEmail = params.get('staffEmail') || '';
+    const qatarId = params.get('qatarId') || '';
+    const choose = (params.get('choose') || '').toLowerCase();
 
-        const fullName = params.get('fullName') || 'Not Provided';
-        const studentEmail = params.get('studentEmail') || 'Not Provided';
-        const qatarId = params.get('qatarId') || 'Not Provided';
-        const choose = params.get('choose') || 'Not Provided';
+    let emailForQR = '';
+    let dataForQR = '';
+    let tagClass = '';
 
-        // Display values
-        document.getElementById('fullName').textContent = fullName;
-        document.getElementById('studentEmail').textContent = studentEmail;
-        document.getElementById('qatarId').textContent = qatarId;
-        document.getElementById('choose').textContent = choose;
+    // Determine which email/data to use based on choice
+    if (choose === 'student') {
+        emailForQR = studentEmail;
+        dataForQR = fullName + '\n' + studentEmail;
+        tagClass = 'student';
+        document.body.classList.add('student');
+    } else if (choose === 'alumni') {
+        emailForQR = studentEmail;
+        dataForQR = fullName + '\n' + studentEmail;
+        tagClass = 'alumni';
+        document.body.classList.add('alumni');
+    } else if (choose === 'staff') {
+        emailForQR = staffEmail;
+        dataForQR = fullName + '\n' + staffEmail;
+        tagClass = 'staff';
+        document.body.classList.add('staff');
+    } else if (choose === 'friends & family') {
+        emailForQR = studentEmail;
+        dataForQR = fullName + '\n' + studentEmail + '\n' + qatarId;
+        tagClass = 'family';
+        document.body.classList.add('family');
+    } else {
+        dataForQR = fullName;
+        emailForQR = '';
+    }
 
-        // Combine only filled fields for QR
-        let dataForQR = "";
-        if (fullName !== 'Not Provided') dataForQR += fullName + "\n";
-        if (studentEmail !== 'Not Provided') dataForQR += studentEmail + "\n";
-        if (qatarId !== 'Not Provided') dataForQR += qatarId + "\n";
-        if (choose !== 'Not Provided') dataForQR += choose;
+    // Display values
+    document.getElementById('fullName').textContent = fullName;
+    document.getElementById('email').textContent = emailForQR;
+    const chooseElem = document.getElementById('choose');
+    chooseElem.textContent = choose.charAt(0).toUpperCase() + choose.slice(1);
+    chooseElem.classList.add(tagClass);
 
-        // Generate QR Code only if something is filled
-        if (dataForQR.trim() !== "") {
-            new QRCode(document.getElementById("qrcode"), {
-                text: dataForQR.trim(),
-                width: 200,
-                height: 200
-            });
+    // Generate QR code
+    let qr = null;
+    if (dataForQR.trim() !== '') {
+        qr = new QRCode(document.getElementById("qrcode"), {
+            text: dataForQR.trim(),
+            width: 200,
+            height: 200
+        });
+    }
+
+    // Download QR code
+    document.getElementById('downloadBtn').addEventListener('click', function() {
+        if (!qr) return;
+        // The QRCode library creates a <div> with a <canvas> inside
+        const canvas = document.querySelector('#qrcode canvas');
+        if (canvas) {
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL("image/png");
+            link.download = fullName + "_QR.png";
+            link.click();
         }
-    </script>
+    });
+</script>
 
 </body>
 </html>
+
+
