@@ -1,111 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Display Registration Info</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 5vw;
-      margin: 0;
-      background-color: #f3f3fe;
-    }
-    h2 {
-      color: #0a1551;
-      font-size: 6vw;
-      margin-bottom: 2vh;
-    }
-    p {
-      color: #444;
-      font-size: 4.5vw;
-      margin: 1vh 0;
-    }
-    .info {
-      margin-top: 4vh;
-      font-size: 4.8vw;
-      color: #0a1551;
-    }
-    .tag {
-      display: inline-block;
-      padding: 6px 12px;
-      border-radius: 12px;
-      font-weight: bold;
-      color: white;
-      margin-top: 8px;
-    }
-    .student { background-color: #007bff; }
-    .alumni { background-color: #ff7a00; }
-    .staff { background-color: #28a745; }
-    .family { background-color: #c63dc6; }
-
-    .subtag {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 10px;
-      font-size: 14px;
-      margin: 4px;
-      color: white;
-      background-color: #6c757d;
-    }
-
-    @media (min-width: 600px) {
-      h2 { font-size: 28px; }
-      p, .info { font-size: 18px; }
-      body { padding: 40px; }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Display Registration Info</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 5vw;
+    margin: 0;
+    background-color: #f3f3fe;
+    text-align: center;
+  }
+  h2 {
+    color: #0a1551;
+    font-size: 6vw;
+    margin-bottom: 2vh;
+  }
+  p {
+    color: #444;
+    font-size: 4.5vw;
+    margin: 1vh 0;
+  }
+  .info {
+    margin-top: 4vh;
+    font-size: 4.8vw;
+    color: #0a1551;
+  }
+  .tag {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-weight: bold;
+    color: white;
+    margin-top: 8px;
+  }
+  .student { background-color: #007bff; }
+  .alumni { background-color: #ff7a00; }
+  .staff { background-color: #28a745; }
+  .family { background-color: #c63dc6; }
+  .subtag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 14px;
+    margin: 4px;
+    color: white;
+    background-color: #6c757d;
+  }
+  #qrcode {
+    margin-top: 5vh;
+    display: flex;
+    justify-content: center;
+  }
+  @media (min-width: 600px) {
+    h2 { font-size: 28px; }
+    p, .info { font-size: 18px; }
+    body { padding: 40px; }
+  }
+</style>
 </head>
 <body>
 
-  <h2>Display Registration Info</h2>
+<h2>Registration Information</h2>
 
-  <div class="info">
-    <p><strong>Full Name:</strong> <span id="fullName"></span></p>
-    <p><strong>Email:</strong> <span id="email"></span></p>
-    <p><strong>Category:</strong> <span id="choose" class="tag"></span></p>
-    <div id="familyFields" style="display:none;">
-      <p><strong>Phone Number:</strong> <span id="phoneNumber" class="subtag"></span></p>
-      <p><strong>Qatar ID:</strong> <span id="qatarId" class="subtag"></span></p>
-    </div>
+<div class="info">
+  <p><strong>Full Name:</strong> <span id="fullName"></span></p>
+  <p><strong>Email:</strong> <span id="email"></span></p>
+  <p><strong>Category:</strong> <span id="choose" class="tag"></span></p>
+
+  <div id="familyFields" style="display:none;">
+    <p><strong>Phone Number:</strong> <span id="phoneNumber" class="subtag"></span></p>
+    <p><strong>Qatar ID:</strong> <span id="qatarId" class="subtag"></span></p>
   </div>
+</div>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const fullName = params.get('fullName') || 'Not Provided';
-    const email = params.get('email') || params.get('studentEmail') || params.get('staffEmail') || '';
-    const chooseRaw = params.get('choose') || '';
-    const choose = chooseRaw.trim().toLowerCase();
-    const phoneNumber = params.get('phoneNumber') || '';
-    const qatarId = params.get('qatarId') || '';
+<div id="qrcode"></div>
 
-    document.getElementById('fullName').textContent = fullName;
-    document.getElementById('email').textContent = email;
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
 
-    const chooseElem = document.getElementById('choose');
-    chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
+  const fullName = params.get('fullName') || 'Not Provided';
+  const email = params.get('email') || '';
+  const chooseRaw = params.get('choose') || '';
+  const choose = chooseRaw.trim().toLowerCase();
+  const phoneNumber = params.get('phoneNumber') || '';
+  const qatarId = params.get('qatarId') || '';
 
-    let tagClass = '';
-    if (choose.includes('student')) tagClass = 'student';
-    else if (choose.includes('alumni')) tagClass = 'alumni';
-    else if (choose.includes('staff')) tagClass = 'staff';
-    else if (choose.includes('family')) tagClass = 'family';
+  let tagClass = '';
+  const isFamily = choose.includes("family");
 
-    if (tagClass) chooseElem.classList.add(tagClass);
+  if (choose === 'student' || choose === 'alumni') {
+    tagClass = choose;
+  } else if (choose === 'staff') {
+    tagClass = 'staff';
+  } else if (isFamily) {
+    tagClass = 'family';
+  }
 
-    // Show extra fields for family
-    if (choose.includes('family')) {
-      document.getElementById('familyFields').style.display = 'block';
-      document.getElementById('phoneNumber').textContent = phoneNumber || 'N/A';
-      document.getElementById('qatarId').textContent = qatarId || 'N/A';
-    }
-  </script>
+  // Display info
+  document.getElementById('fullName').textContent = fullName;
+  document.getElementById('email').textContent = email;
+  const chooseElem = document.getElementById('choose');
+  chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
+  if (tagClass) chooseElem.classList.add(tagClass);
+
+  if (isFamily) {
+    document.getElementById('familyFields').style.display = 'block';
+    document.getElementById('phoneNumber').textContent = phoneNumber || 'N/A';
+    document.getElementById('qatarId').textContent = qatarId || 'N/A';
+  }
+
+  // Regenerate QR code with same data (URL link)
+  const currentURL = window.location.href;
+  new QRCode(document.getElementById("qrcode"), {
+    text: currentURL,
+    width: 300,
+    height: 300
+  });
+</script>
 
 </body>
 </html>
 
+
   
+
 
 
 
