@@ -47,7 +47,7 @@
     }
 
     // Build link to second page with query params
-    const secondPageURL = `display.html?fullName=${encodeURIComponent(fullName)}&email=${encodeURIComponent(email)}&choose=${encodeURIComponent(chooseRaw)}&qatarId=${encodeURIComponent(qatarId)}`;
+    const secondPageURL = `https://aishamehrban.github.io/registration-info/display.html?fullName=${encodeURIComponent(fullName)}&email=${encodeURIComponent(email)}&choose=${encodeURIComponent(chooseRaw)}&qatarId=${encodeURIComponent(qatarId)}`;
 
     // Generate QR code linking to second page
     new QRCode(document.getElementById("qrcode"), {
@@ -70,3 +70,4 @@
 
 </body>
 </html>
+
