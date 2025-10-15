@@ -1,10 +1,9 @@
-<!-- registration.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Generate QR Code</title>
+  <title>Display Registration Info</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -51,25 +50,6 @@
       background-color: #6c757d;
     }
 
-    #qrcode {
-      margin-top: 5vh;
-      display: flex;
-      justify-content: center;
-    }
-    #downloadBtn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      background-color: #0a1551;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    #downloadBtn:hover {
-      background-color: #1a2a6c;
-    }
     @media (min-width: 600px) {
       h2 { font-size: 28px; }
       p, .info { font-size: 18px; }
@@ -79,98 +59,55 @@
 </head>
 <body>
 
-  <h2>Generated QR Code</h2>
+  <h2>Display Registration Info</h2>
 
   <div class="info">
     <p><strong>Full Name:</strong> <span id="fullName"></span></p>
     <p><strong>Email:</strong> <span id="email"></span></p>
     <p><strong>Category:</strong> <span id="choose" class="tag"></span></p>
-    
-    <!-- Family-only fields -->
     <div id="familyFields" style="display:none;">
       <p><strong>Phone Number:</strong> <span id="phoneNumber" class="subtag"></span></p>
       <p><strong>Qatar ID:</strong> <span id="qatarId" class="subtag"></span></p>
     </div>
   </div>
 
-  <div id="qrcode"></div>
-  <button id="downloadBtn">Download QR Code</button>
-
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
   <script>
     const params = new URLSearchParams(window.location.search);
     const fullName = params.get('fullName') || 'Not Provided';
-    const studentEmail = params.get('studentEmail') || '';
-    const staffEmail = params.get('staffEmail') || '';
-    const qatarId = params.get('qatarId') || '';
-    const phoneNumber = params.get('phoneNumber') || '';
+    const email = params.get('email') || params.get('studentEmail') || params.get('staffEmail') || '';
     const chooseRaw = params.get('choose') || '';
     const choose = chooseRaw.trim().toLowerCase();
+    const phoneNumber = params.get('phoneNumber') || '';
+    const qatarId = params.get('qatarId') || '';
 
-    let email = '';
-    let tagClass = '';
-    let qrData = '';
-
-    const isFamily = choose.includes("family");
-
-    if (choose === 'student' || choose === 'alumni') {
-      email = studentEmail;
-      tagClass = choose;
-      qrData = `${fullName}\n${email}`;
-    } else if (choose === 'staff') {
-      email = staffEmail;
-      tagClass = 'staff';
-      qrData = `${fullName}\n${email}`;
-    } else if (isFamily) {
-      email = params.get('email') || '';
-      tagClass = 'family';
-
-      // Construct QR with required tags
-      qrData = `{phoneNumber}${phoneNumber}{email}${email}{qatarId}${qatarId}`;
-    } else {
-      email = studentEmail || staffEmail || '';
-      qrData = `${fullName}\n${email}`;
-    }
-
-    // Display info
     document.getElementById('fullName').textContent = fullName;
     document.getElementById('email').textContent = email;
 
     const chooseElem = document.getElementById('choose');
     chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
-    if(tagClass) chooseElem.classList.add(tagClass);
 
-    // Show family info if needed
-    if (isFamily) {
+    let tagClass = '';
+    if (choose.includes('student')) tagClass = 'student';
+    else if (choose.includes('alumni')) tagClass = 'alumni';
+    else if (choose.includes('staff')) tagClass = 'staff';
+    else if (choose.includes('family')) tagClass = 'family';
+
+    if (tagClass) chooseElem.classList.add(tagClass);
+
+    // Show extra fields for family
+    if (choose.includes('family')) {
       document.getElementById('familyFields').style.display = 'block';
-      document.getElementById('phoneNumber').textContent = phoneNumber;
-      document.getElementById('qatarId').textContent = qatarId;
+      document.getElementById('phoneNumber').textContent = phoneNumber || 'N/A';
+      document.getElementById('qatarId').textContent = qatarId || 'N/A';
     }
-
-    // Build link to display.html (optional; not used in QR here)
-    const secondPageURL = `display.html?fullName=${encodeURIComponent(fullName)}&email=${encodeURIComponent(email)}&choose=${encodeURIComponent(chooseRaw)}&qatarId=${encodeURIComponent(qatarId)}&phoneNumber=${encodeURIComponent(phoneNumber)}`;
-
-    // Generate QR code
-    new QRCode(document.getElementById("qrcode"), {
-      text: qrData,
-      width: 300,
-      height: 300
-    });
-
-    // Download QR code
-    document.getElementById('downloadBtn').addEventListener('click', () => {
-      const canvas = document.querySelector('#qrcode canvas');
-      if (canvas) {
-        const link = document.createElement('a');
-        link.href = canvas.toDataURL("image/png");
-        link.download = `${fullName}_QR.png`;
-        link.click();
-      }
-    });
   </script>
 
 </body>
 </html>
+
+  
+
+
 
 
 
