@@ -1,0 +1,47 @@
+<!-- display.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Info</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 5vw; background-color: #f3f3fe; }
+    h2 { color: #0a1551; }
+    p { font-size: 18px; margin: 10px 0; }
+    .tag { display: inline-block; padding: 6px 12px; border-radius: 12px; font-weight: bold; color: white; margin-top: 8px; }
+    .student { background-color: #007bff; }
+    .alumni { background-color: #ff7a00; }
+    .staff { background-color: #28a745; }
+    .family { background-color: #c63dc6; }
+  </style>
+</head>
+<body>
+
+  <h2>Registration Information</h2>
+
+  <p><strong>Full Name:</strong> <span id="fullName"></span></p>
+  <p><strong>Email:</strong> <span id="email"></span></p>
+  <p><strong>Category:</strong> <span id="choose" class="tag"></span></p>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const fullName = params.get('fullName') || 'Not Provided';
+    const email = params.get('email') || 'Not Provided';
+    const chooseRaw = params.get('choose') || 'N/A';
+    const choose = chooseRaw.trim().toLowerCase();
+
+    document.getElementById('fullName').textContent = fullName;
+    document.getElementById('email').textContent = email;
+
+    const chooseElem = document.getElementById('choose');
+    chooseElem.textContent = chooseRaw;
+
+    if (choose === 'student') chooseElem.classList.add('student');
+    else if (choose === 'alumni') chooseElem.classList.add('alumni');
+    else if (choose === 'staff') chooseElem.classList.add('staff');
+    else if (choose.includes('family')) chooseElem.classList.add('family');
+  </script>
+
+</body>
+</html>
