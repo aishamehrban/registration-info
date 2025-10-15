@@ -121,7 +121,7 @@
     if(tagClass) chooseElem.classList.add(tagClass);
 
     // Build URL to display.html
-    const secondPageURL = `display.html?fullName=${encodeURIComponent(fullName)}&email=${encodeURIComponent(email)}&choose=${encodeURIComponent(chooseRaw)}&qatarId=${encodeURIComponent(qatarId)}`;
+    const secondPageURL = `https://aishamehrban.github.io/registration-info/display.html?fullName=${encodeURIComponent(fullName)}&email=${encodeURIComponent(email)}&choose=${encodeURIComponent(chooseRaw)}&qatarId=${encodeURIComponent(qatarId)}`;
 
     // Generate QR code pointing to display.html
     new QRCode(document.getElementById("qrcode"), {
@@ -144,3 +144,4 @@
 
 </body>
 </html>
+
