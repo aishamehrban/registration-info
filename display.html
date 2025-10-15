@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registration Info</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Display Info</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -26,11 +26,6 @@
       margin-top: 4vh;
       font-size: 4.8vw;
       color: #0a1551;
-    }
-    #qrcode {
-      margin-top: 5vh;
-      display: flex;
-      justify-content: center;
     }
     .tag {
       display: inline-block;
@@ -64,12 +59,52 @@
 </head>
 <body>
 
-  <h2>Registration Information</h2>
+  <h2>Registration Info</h2>
 
   <div class="info">
     <p><strong>Full Name:</strong> <span id="fullName"></span></p>
     <p><strong>Email:</strong> <span id="email"></span></p>
     <p><strong>Category:</strong> <span id="choose" class="tag"></span></p>
-    <div id="familyFields"
+    <div id="familyFields" style="display:none;">
+      <p><strong>Phone Number:</strong> <span id="phoneNumber" class="subtag"></span></p>
+      <p><strong>Qatar ID:</strong> <span id="qatarId" class="subtag"></span></p>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const fullName = params.get('fullName') || 'Not Provided';
+    const email = params.get('email') || params.get('studentEmail') || params.get('staffEmail') || '';
+    const chooseRaw = params.get('choose') || '';
+    const choose = chooseRaw.trim().toLowerCase();
+    const phoneNumber = params.get('phoneNumber') || '';
+    const qatarId = params.get('qatarId') || '';
+
+    document.getElementById('fullName').textContent = fullName;
+    document.getElementById('email').textContent = email;
+
+    const chooseElem = document.getElementById('choose');
+    chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
+
+    let tagClass = '';
+    if (choose.includes('student')) tagClass = 'student';
+    else if (choose.includes('alumni')) tagClass = 'alumni';
+    else if (choose.includes('staff')) tagClass = 'staff';
+    else if (choose.includes('family')) tagClass = 'family';
+
+    if (tagClass) chooseElem.classList.add(tagClass);
+
+    // Show extra fields for family
+    if (choose.includes('family')) {
+      document.getElementById('familyFields').style.display = 'block';
+      document.getElementById('phoneNumber').textContent = phoneNumber || 'N/A';
+      document.getElementById('qatarId').textContent = qatarId || 'N/A';
+    }
+  </script>
+
+</body>
+</html>
+
+
 
 
