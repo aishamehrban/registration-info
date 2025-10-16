@@ -1,24 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Display Info & QR</title>
   <style>
     body { font-family: Arial, sans-serif; text-align: center; padding: 5vw; margin: 0; background-color: #f3f3fe; }
     h2 { color: #0a1551; font-size: 6vw; }
-    .info p { color: #444; font-size: 4.5vw; margin: 1vh 0; }
-    .tag { display: inline-block; padding: 6px 12px; border-radius: 12px; font-weight: bold; color: white; margin-top: 8px; }
-    .tag.student { background-color: #007bff; }
-    .tag.alumni { background-color: #ff7a00; }
-    .tag.staff { background-color: #28a745; }
-    .tag.family { background-color: #c63dc6; }
+    p { color: #444; font-size: 4.5vw; margin: 1vh 0; }
+    .info { margin-top: 4vh; font-size: 4.8vw; color: #0a1551; }
     #qrcode { margin-top: 5vh; }
     #downloadBtn { margin-top: 20px; padding: 10px 20px; font-size: 16px; background-color: #0a1551; color: white; border: none; border-radius: 5px; cursor: pointer; }
     #downloadBtn:hover { background-color: #1a2a6c; }
     @media (min-width: 600px) {
       h2 { font-size: 28px; }
-      .info p { font-size: 18px; }
+      p, .info { font-size: 18px; }
       body { padding: 40px; }
     }
   </style>
@@ -30,8 +26,6 @@
   <div class="info">
     <p><strong>Full Name:</strong> <span id="fullName"></span></p>
     <p><strong>Email:</strong> <span id="email"></span></p>
-    <p id="phoneRow" style="display:none;"><strong>Phone Number:</strong> <span id="phoneNumber"></span></p>
-    <p id="qatarRow" style="display:none;"><strong>Qatar ID:</strong> <span id="qatarId"></span></p>
     <p><strong>Category:</strong> <span id="choose" class="tag"></span></p>
   </div>
 
@@ -43,43 +37,32 @@
     const params = new URLSearchParams(window.location.search);
     const fullName = params.get('fullName') || '';
     const emailParam = params.get('email') || '';
-    const phoneNumber = params.get('phoneNumber') || '';
-    const qatarId = params.get('qatarId') || '';
     const chooseRaw = params.get('choose') || '';
     const choose = chooseRaw.trim().toLowerCase();
 
+    // Display information
     document.getElementById('fullName').textContent = fullName;
     document.getElementById('email').textContent = emailParam;
 
-    if (choose.includes('family')) {
-      document.getElementById('phoneRow').style.display = 'block';
-      document.getElementById('qatarRow').style.display = 'block';
-    }
-
-    document.getElementById('phoneNumber').textContent = phoneNumber;
-    document.getElementById('qatarId').textContent = qatarId;
-
     const chooseElem = document.getElementById('choose');
     chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
-    chooseElem.classList.add(
-      choose === 'student' ? 'student' :
-      choose === 'alumni' ? 'alumni' :
-      choose === 'staff' ? 'staff' :
-      'family'
-    );
 
-    let qrData = `Name: ${fullName}\nCategory: ${chooseRaw}\nEmail: ${emailParam}`;
-    if (choose.includes('family')) {
-      qrData += `\nPhone: ${phoneNumber}\nQatar ID: ${qatarId}`;
-    }
+    // Add the tag class to category
+    if (choose === 'student') chooseElem.classList.add('student');
+    else if (choose === 'alumni') chooseElem.classList.add('alumni');
+    else if (choose === 'staff') chooseElem.classList.add('staff');
+    else chooseElem.classList.add('family');
 
+    // Generate the QR code based on the information
+    const qrData = `Full Name: ${fullName}\nCategory: ${chooseRaw}\nEmail: ${emailParam}`;
     new QRCode(document.getElementById("qrcode"), {
       text: qrData,
       width: 200,
       height: 200
     });
 
-    document.getElementById('downloadBtn').addEventListener('click', () => {
+    // Download the QR Code
+    document.getElementById('downloadBtn').addEventListener('click', function () {
       const canvas = document.querySelector('#qrcode canvas');
       if (canvas) {
         const link = document.createElement('a');
@@ -99,7 +82,9 @@
 
 
 
+
   
+
 
 
 
