@@ -47,7 +47,7 @@
   const chooseRaw = params.get('choose') || '';
   const choose = chooseRaw.trim().toLowerCase();
 
-  // Determine email to display
+  // Determine which email to show
   let email = '';
   if(choose === 'student' || choose === 'alumni') {
     email = studentEmail || emailParam || staffEmail || 'Not Provided';
@@ -58,7 +58,7 @@
     email = emailParam || studentEmail || staffEmail || 'Not Provided';
   }
 
-  // Show or hide phone and Qatar ID fields based on category
+  // Show/hide phone and qatar ID fields for family & friends only
   const phoneField = document.getElementById('phoneField');
   const qatarIdField = document.getElementById('qatarIdField');
   if(choose === 'family' || choose === 'family & friends' || choose === 'friends & family') {
@@ -69,13 +69,13 @@
     qatarIdField.style.display = 'none';
   }
 
-  // Display info on page
+  // Display user info
   document.getElementById('fullName').textContent = fullName;
   document.getElementById('email').textContent = email;
   document.getElementById('phoneNumber').textContent = phoneNumber || 'Not Provided';
   document.getElementById('qatarId').textContent = qatarId || 'Not Provided';
 
-  // Tag classes for styling
+  // Tag style
   const chooseElem = document.getElementById('choose');
   chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
   chooseElem.classList.remove('student', 'alumni', 'staff', 'family');
@@ -84,7 +84,7 @@
   else if(choose === 'staff') chooseElem.classList.add('staff');
   else if(choose === 'family' || choose === 'family & friends' || choose === 'friends & family') chooseElem.classList.add('family');
 
-  // Prepare QR data string depending on category
+  // QR code data string:
   let qrData = `Name: ${fullName}\nCategory: ${chooseRaw}\nEmail: ${email}`;
   if(choose === 'family' || choose === 'family & friends' || choose === 'friends & family') {
     qrData += `\nPhone: ${phoneNumber || 'Not Provided'}\nQatar ID: ${qatarId || 'Not Provided'}`;
@@ -113,6 +113,8 @@
 
 </body>
 </html>
+
+
 
 
 
