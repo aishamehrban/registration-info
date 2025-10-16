@@ -12,67 +12,18 @@
       margin: 0;
       background-color: #f3f3fe;
     }
-    h2 {
-      color: #0a1551;
-      font-size: 6vw;
-      margin-bottom: 2vh;
-    }
-    p {
-      color: #444;
-      font-size: 4.5vw;
-      margin: 1vh 0;
-    }
-    .info {
-      margin-top: 4vh;
-      font-size: 4.8vw;
-      color: #0a1551;
-    }
-    .tag {
-      display: inline-block;
-      padding: 6px 12px;
-      border-radius: 12px;
-      font-weight: bold;
-      color: white;
-      margin-top: 8px;
-    }
+    h2 { color: #0a1551; font-size: 6vw; margin-bottom: 2vh; }
+    p { color: #444; font-size: 4.5vw; margin: 1vh 0; }
+    .info { margin-top: 4vh; font-size: 4.8vw; color: #0a1551; }
+    .tag { display: inline-block; padding: 6px 12px; border-radius: 12px; font-weight: bold; color: white; margin-top: 8px; }
     .student { background-color: #007bff; }
     .alumni { background-color: #ff7a00; }
     .staff { background-color: #28a745; }
     .family { background-color: #c63dc6; }
-    .subtag {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 10px;
-      font-size: 14px;
-      margin: 4px;
-      color: white;
-      background-color: #6c757d;
-    }
-    #qrcode {
-      margin-top: 5vh;
-      display: flex;
-      justify-content: center;
-    }
-    #downloadBtn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      background-color: #0a1551;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    #downloadBtn:hover {
-      background-color: #1a2a6c;
-    }
-    .debug {
-      margin-top: 20px;
-      color: red;
-      font-size: 14px;
-      word-break: break-all;
-    }
+    .subtag { display: inline-block; padding: 4px 10px; border-radius: 10px; font-size: 14px; margin: 4px; color: white; background-color: #6c757d; }
+    #qrcode { margin-top: 5vh; display: flex; justify-content: center; }
+    #downloadBtn { margin-top: 20px; padding: 10px 20px; font-size: 16px; font-weight: bold; background-color: #0a1551; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    #downloadBtn:hover { background-color: #1a2a6c; }
     @media (min-width: 600px) {
       h2 { font-size: 28px; }
       p, .info { font-size: 18px; }
@@ -98,76 +49,78 @@
   <div id="qrcode"></div>
   <button id="downloadBtn">Download QR Code</button>
 
-  <div class="debug" id="debugLog"></div>
-
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
   <script>
     const params = new URLSearchParams(window.location.search);
 
+    // Read all possible parameters
     const fullName = params.get('fullName') || '';
     const studentEmail = params.get('studentEmail') || '';
     const staffEmail = params.get('staffEmail') || '';
-    const familyEmail = params.get('email') || '';
+    const familyEmail = params.get('email') || '';  // for family & friends
     const phoneNumber = params.get('phoneNumber') || '';
     const qatarId = params.get('qatarId') || '';
     const chooseRaw = params.get('choose') || '';
     const choose = chooseRaw.trim().toLowerCase();
 
-    // Debug: show what was received
-    document.getElementById('debugLog').textContent =
-      `Received params → fullName: ${fullName}, studentEmail: ${studentEmail}, staffEmail: ${staffEmail}, email: ${familyEmail}, phoneNumber: ${phoneNumber}, qatarId: ${qatarId}, choose: ${chooseRaw}`;
-
-    let email = '';
+    let emailToShow = '';
     let tagClass = '';
     const isFamily = choose.includes("family");
 
-    if (choose === 'student' || choose === 'alumni') {
-      email = studentEmail;
+    if (isFamily) {
+      // For family & friends, use the general email field
+      emailToShow = familyEmail;
+      tagClass = 'family';
+    } else if (choose === 'student' || choose === 'alumni') {
+      emailToShow = studentEmail;
       tagClass = choose;
     } else if (choose === 'staff') {
-      email = staffEmail;
+      emailToShow = staffEmail;
       tagClass = 'staff';
-    } else if (isFamily) {
-      email = familyEmail;
-      tagClass = 'family';
+    } else {
+      // fallback
+      emailToShow = studentEmail || staffEmail || familyEmail || '';
     }
 
+    // Display the info
     document.getElementById('fullName').textContent = fullName;
-    document.getElementById('email').textContent = email;
+    document.getElementById('email').textContent = emailToShow;
 
     const chooseElem = document.getElementById('choose');
     chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
     if (tagClass) chooseElem.classList.add(tagClass);
 
+    // If family, show the extra fields
     if (isFamily) {
       document.getElementById('familyFields').style.display = 'block';
       document.getElementById('phoneNumber').textContent = phoneNumber || 'N/A';
       document.getElementById('qatarId').textContent = qatarId || 'N/A';
     }
 
-    // Build QR link
+    // Build the QR code link: it should point to display-info.html with all needed params
     const baseURL = "https://aishamehrban.github.io/registration-info/display-info.html";
     const qrParams = new URLSearchParams({
-      fullName,
-      email,
+      fullName: fullName,
+      email: emailToShow,
       choose: chooseRaw,
-      phoneNumber,
-      qatarId
+      phoneNumber: phoneNumber,
+      qatarId: qatarId
     });
-    const qrData = `${baseURL}?${qrParams.toString()}`;
+    const qrLink = baseURL + "?" + qrParams.toString();
 
     new QRCode(document.getElementById("qrcode"), {
-      text: qrData,
+      text: qrLink,
       width: 300,
       height: 300
     });
 
+    // Download QR
     document.getElementById('downloadBtn').addEventListener('click', () => {
       const canvas = document.querySelector('#qrcode canvas');
       if (canvas) {
         const link = document.createElement('a');
         link.href = canvas.toDataURL("image/png");
-        link.download = `${fullName}_QR.png`;
+        link.download = `${fullName || 'QR'}_QR.png`;
         link.click();
       }
     });
@@ -175,6 +128,8 @@
 
 </body>
 </html>
+
+
 
 
 
