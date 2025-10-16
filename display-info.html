@@ -7,10 +7,10 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      text-align: center;
       padding: 5vw;
       margin: 0;
       background-color: #f3f3fe;
+      text-align: center;
     }
     h2 {
       color: #0a1551;
@@ -75,7 +75,7 @@
     <p><strong>Email:</strong> <span id="email"></span></p>
     <p><strong>Category:</strong> <span id="choose" class="tag"></span></p>
 
-    <div id="familyFields" style="display: none;">
+    <div id="familyFields" style="display:none;">
       <p><strong>Phone Number:</strong> <span id="phoneNumber" class="subtag"></span></p>
       <p><strong>Qatar ID:</strong> <span id="qatarId" class="subtag"></span></p>
     </div>
@@ -87,7 +87,6 @@
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
   <script>
     const params = new URLSearchParams(window.location.search);
-
     const fullName = params.get('fullName') || '';
     const email = params.get('email') || '';
     const chooseRaw = params.get('choose') || '';
@@ -95,9 +94,8 @@
     const phoneNumber = params.get('phoneNumber') || '';
     const qatarId = params.get('qatarId') || '';
 
-    // Debug: show received values
     document.getElementById('debugLog').textContent =
-      `Display Params: fullName=${fullName}, email=${email}, choose=${chooseRaw}, phoneNumber=${phoneNumber}, qatarId=${qatarId}`;
+      `Received at display-info → fullName: ${fullName}, email: ${email}, choose: ${chooseRaw}, phoneNumber: ${phoneNumber}, qatarId: ${qatarId}`;
 
     document.getElementById('fullName').textContent = fullName;
     document.getElementById('email').textContent = email;
@@ -120,9 +118,10 @@
       document.getElementById('qatarId').textContent = qatarId || 'N/A';
     }
 
-    // Regenerate QR of the current URL
+    // regenerate QR with the same URL
+    const currentURL = window.location.href;
     new QRCode(document.getElementById("qrcode"), {
-      text: window.location.href,
+      text: currentURL,
       width: 300,
       height: 300
     });
@@ -133,7 +132,9 @@
 
 
 
+
   
+
 
 
 
