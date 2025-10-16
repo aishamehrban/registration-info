@@ -5,13 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Display Info & QR</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; padding: 5vw; margin: 0; background-color: #f3f3fe; }
-    h2 { color: #0a1551; font-size: 6vw; }
-    p { color: #444; font-size: 4.5vw; margin: 1vh 0; }
-    .info { margin-top: 4vh; font-size: 4.8vw; color: #0a1551; }
-    #qrcode { margin-top: 5vh; }
-    #downloadBtn { margin-top: 20px; padding: 10px 20px; font-size: 16px; background-color: #0a1551; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    #downloadBtn:hover { background-color: #1a2a6c; }
+    body { 
+      font-family: Arial, sans-serif; 
+      text-align: center; 
+      padding: 5vw; 
+      margin: 0; 
+      background-color: #f3f3fe; 
+    }
+    h2 { 
+      color: #0a1551; 
+      font-size: 6vw; 
+    }
+    p { 
+      color: #444; 
+      font-size: 4.5vw; 
+      margin: 1vh 0; 
+    }
+    .info { 
+      margin-top: 4vh; 
+      font-size: 4.8vw; 
+      color: #0a1551; 
+    }
+    #qrcode { 
+      margin-top: 5vh; 
+    }
+    #downloadBtn { 
+      margin-top: 20px; 
+      padding: 10px 20px; 
+      font-size: 16px; 
+      background-color: #0a1551; 
+      color: white; 
+      border: none; 
+      border-radius: 5px; 
+      cursor: pointer; 
+    }
+    #downloadBtn:hover { 
+      background-color: #1a2a6c; 
+    }
     @media (min-width: 600px) {
       h2 { font-size: 28px; }
       p, .info { font-size: 18px; }
@@ -40,20 +70,17 @@
     const chooseRaw = params.get('choose') || '';
     const choose = chooseRaw.trim().toLowerCase();
 
-    // Display information
     document.getElementById('fullName').textContent = fullName;
     document.getElementById('email').textContent = emailParam;
 
     const chooseElem = document.getElementById('choose');
     chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
 
-    // Add the tag class to category
     if (choose === 'student') chooseElem.classList.add('student');
     else if (choose === 'alumni') chooseElem.classList.add('alumni');
     else if (choose === 'staff') chooseElem.classList.add('staff');
     else chooseElem.classList.add('family');
 
-    // Generate the QR code based on the information
     const qrData = `Full Name: ${fullName}\nCategory: ${chooseRaw}\nEmail: ${emailParam}`;
     new QRCode(document.getElementById("qrcode"), {
       text: qrData,
@@ -61,7 +88,6 @@
       height: 200
     });
 
-    // Download the QR Code
     document.getElementById('downloadBtn').addEventListener('click', function () {
       const canvas = document.querySelector('#qrcode canvas');
       if (canvas) {
@@ -83,7 +109,9 @@
 
 
 
+
   
+
 
 
 
