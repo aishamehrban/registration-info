@@ -113,9 +113,9 @@
     const chooseRaw = params.get('choose') || '';
     const choose = chooseRaw.trim().toLowerCase();
 
-    // Debug: show what came in
+    // Debug: show what was received
     document.getElementById('debugLog').textContent =
-      `Params: fullName=${fullName}; studentEmail=${studentEmail}; staffEmail=${staffEmail}; email=${familyEmail}; phoneNumber=${phoneNumber}; qatarId=${qatarId}; choose=${chooseRaw}`;
+      `Received params → fullName: ${fullName}, studentEmail: ${studentEmail}, staffEmail: ${staffEmail}, email: ${familyEmail}, phoneNumber: ${phoneNumber}, qatarId: ${qatarId}, choose: ${chooseRaw}`;
 
     let email = '';
     let tagClass = '';
@@ -145,16 +145,16 @@
       document.getElementById('qatarId').textContent = qatarId || 'N/A';
     }
 
-    // Build QR link including all data
+    // Build QR link
     const baseURL = "https://aishamehrban.github.io/registration-info/display-info.html";
     const qrParams = new URLSearchParams({
-      fullName: fullName,
-      email: email,
+      fullName,
+      email,
       choose: chooseRaw,
-      phoneNumber: phoneNumber,
-      qatarId: qatarId
+      phoneNumber,
+      qatarId
     });
-    const qrData = baseURL + "?" + qrParams.toString();
+    const qrData = `${baseURL}?${qrParams.toString()}`;
 
     new QRCode(document.getElementById("qrcode"), {
       text: qrData,
@@ -167,7 +167,7 @@
       if (canvas) {
         const link = document.createElement('a');
         link.href = canvas.toDataURL("image/png");
-        link.download = `${fullName || 'QR'}_QR.png`;
+        link.download = `${fullName}_QR.png`;
         link.click();
       }
     });
@@ -175,6 +175,8 @@
 
 </body>
 </html>
+
+
 
 
 
