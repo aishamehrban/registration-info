@@ -7,10 +7,10 @@
   <style>
     body {
       font-family: Arial, sans-serif;
+      text-align: center;
       padding: 5vw;
       margin: 0;
       background-color: #f3f3fe;
-      text-align: center;
     }
     h2 {
       color: #0a1551;
@@ -53,12 +53,6 @@
       display: flex;
       justify-content: center;
     }
-    .debug {
-      margin-top: 20px;
-      color: red;
-      font-size: 14px;
-      word-break: break-all;
-    }
     @media (min-width: 600px) {
       h2 { font-size: 28px; }
       p, .info { font-size: 18px; }
@@ -82,20 +76,17 @@
   </div>
 
   <div id="qrcode"></div>
-  <div class="debug" id="debugLog"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
   <script>
     const params = new URLSearchParams(window.location.search);
+
     const fullName = params.get('fullName') || '';
     const email = params.get('email') || '';
     const chooseRaw = params.get('choose') || '';
     const choose = chooseRaw.trim().toLowerCase();
     const phoneNumber = params.get('phoneNumber') || '';
     const qatarId = params.get('qatarId') || '';
-
-    document.getElementById('debugLog').textContent =
-      `Received at display-info → fullName: ${fullName}, email: ${email}, choose: ${chooseRaw}, phoneNumber: ${phoneNumber}, qatarId: ${qatarId}`;
 
     document.getElementById('fullName').textContent = fullName;
     document.getElementById('email').textContent = email;
@@ -104,24 +95,22 @@
     chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
 
     let tagClass = '';
-    const isFamily = choose.includes("family");
     if (choose === 'student') tagClass = 'student';
     else if (choose === 'alumni') tagClass = 'alumni';
     else if (choose === 'staff') tagClass = 'staff';
-    else if (isFamily) tagClass = 'family';
+    else if (choose.includes('family')) tagClass = 'family';
 
     if (tagClass) chooseElem.classList.add(tagClass);
 
-    if (isFamily) {
+    if (choose.includes('family')) {
       document.getElementById('familyFields').style.display = 'block';
       document.getElementById('phoneNumber').textContent = phoneNumber || 'N/A';
       document.getElementById('qatarId').textContent = qatarId || 'N/A';
     }
 
-    // regenerate QR with the same URL
-    const currentURL = window.location.href;
-    new QRCode(document.getElementById("qrcode"), {
-      text: currentURL,
+    // regenerate QR of current URL
+    new QRCode(document.getElementById('qrcode'), {
+      text: window.location.href,
       width: 300,
       height: 300
     });
@@ -133,7 +122,9 @@
 
 
 
+
   
+
 
 
 
