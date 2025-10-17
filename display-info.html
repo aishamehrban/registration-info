@@ -66,7 +66,7 @@
 
   <div class="info">
     <p><strong>Full Name:</strong> <span id="fullName"></span></p>
-    <p><strong>Email:</strong> <span id="email"></span></p>
+    <p><strong>Email:</strong> <span id='email'></span></p>
     <p><strong>Category:</strong> <span id="choose" class="tag"></span></p>
 
     <div id="familyFields" style="display:none;">
@@ -94,18 +94,15 @@
     const chooseElem = document.getElementById('choose');
     chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
 
-    let tagClass = '';
-    if (choose === 'student') tagClass = 'student';
-    else if (choose === 'alumni') tagClass = 'alumni';
-    else if (choose === 'staff') tagClass = 'staff';
-    else if (choose.includes('family')) tagClass = 'family';
-
-    if (tagClass) chooseElem.classList.add(tagClass);
+    if (choose === 'student') chooseElem.classList.add('student');
+    else if (choose === 'alumni') chooseElem.classList.add('alumni');
+    else if (choose === 'staff') chooseElem.classList.add('staff');
+    else if (choose.includes('family')) chooseElem.classList.add('family');
 
     if (choose.includes('family')) {
       document.getElementById('familyFields').style.display = 'block';
-      document.getElementById('phoneNumber').textContent = phoneNumber || 'N/A';
-      document.getElementById('qatarId').textContent = qatarId || 'N/A';
+      document.getElementById('phoneNumber').textContent = phoneNumber;
+      document.getElementById('qatarId').textContent = qatarId;
     }
 
     new QRCode(document.getElementById('qrcode'), {
@@ -130,7 +127,9 @@
 
 
 
+
   
+
 
 
 
