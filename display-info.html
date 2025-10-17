@@ -52,6 +52,11 @@
       margin-top: 5vh;
       display: flex;
       justify-content: center;
+      /* Force size to avoid zero size issue */
+      width: 300px;
+      height: 300px;
+      margin-left: auto;
+      margin-right: auto;
     }
     @media (min-width: 600px) {
       h2 { font-size: 28px; }
@@ -79,6 +84,10 @@
 
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
   <script>
+    // Clear previous QR if exists
+    const qrcodeContainer = document.getElementById('qrcode');
+    qrcodeContainer.innerHTML = '';
+
     const params = new URLSearchParams(window.location.search);
 
     const fullName = params.get('fullName') || '';
@@ -108,12 +117,14 @@
       document.getElementById('qatarId').textContent = qatarId || 'N/A';
     }
 
-    // ✅ Always generate QR code (including family & friends)
-    new QRCode(document.getElementById('qrcode'), {
+    // Generate QR code based on full URL to display current page + params
+    new QRCode(qrcodeContainer, {
       text: window.location.href,
       width: 300,
-      height: 300
+      height: 300,
+      correctLevel: QRCode.CorrectLevel.H
     });
+
   </script>
 
 </body>
@@ -135,7 +146,9 @@
 
 
 
+
   
+
 
 
 
