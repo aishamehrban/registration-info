@@ -100,11 +100,13 @@
     // Build the QR code link: it should point to display-info.html with all needed params
     const baseURL = "https://aishamehrban.github.io/registration-info/display-info.html";
     const qrParams = new URLSearchParams({
-      fullName: fullName,
-      email: emailToShow,
-      choose: chooseRaw,
-      phoneNumber: phoneNumber,
-      qatarId: qatarId
+  fullName: fullName,
+  email: emailToShow,
+  choose: chooseRaw,
+  phoneNumber: phoneNumber,
+  qatarId: qatarId
+});
+
     });
     const qrLink = baseURL + "?" + qrParams.toString();
 
@@ -128,6 +130,7 @@
 
 </body>
 </html>
+
 
 
 
