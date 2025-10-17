@@ -5,13 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Generate QR Code</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 5vw;
-      margin: 0;
-      background-color: #f3f3fe;
-    }
+    body { font-family: Arial, sans-serif; text-align: center; padding: 5vw; margin: 0; background-color: #f3f3fe; }
     h2 { color: #0a1551; font-size: 6vw; margin-bottom: 2vh; }
     p { color: #444; font-size: 4.5vw; margin: 1vh 0; }
     .info { margin-top: 4vh; font-size: 4.8vw; color: #0a1551; }
@@ -24,11 +18,7 @@
     #qrcode { margin-top: 5vh; display: flex; justify-content: center; }
     #downloadBtn { margin-top: 20px; padding: 10px 20px; font-size: 16px; font-weight: bold; background-color: #0a1551; color: white; border: none; border-radius: 5px; cursor: pointer; }
     #downloadBtn:hover { background-color: #1a2a6c; }
-    @media (min-width: 600px) {
-      h2 { font-size: 28px; }
-      p, .info { font-size: 18px; }
-      body { padding: 40px; }
-    }
+    @media (min-width: 600px) { h2 { font-size: 28px; } p, .info { font-size: 18px; } body { padding: 40px; } }
   </style>
 </head>
 <body>
@@ -40,7 +30,7 @@
     <p><strong>Email:</strong> <span id="email"></span></p>
     <p><strong>Category:</strong> <span id="choose" class="tag"></span></p>
 
-    <div id="familyFields" style="display:none;">
+    <div id="familyFields" style="display: none;">
       <p><strong>Phone Number:</strong> <span id="phoneNumber" class="subtag"></span></p>
       <p><strong>Qatar ID:</strong> <span id="qatarId" class="subtag"></span></p>
     </div>
@@ -66,7 +56,6 @@
     let tagClass = '';
     const isFamily = choose.includes("family");
 
-    // Always use "email" as final param to be passed to QR
     if (isFamily) {
       emailToShow = familyEmail;
       tagClass = 'family';
@@ -80,7 +69,6 @@
       emailToShow = studentEmail || staffEmail || familyEmail || '';
     }
 
-    // Display info
     document.getElementById('fullName').textContent = fullName;
     document.getElementById('email').textContent = emailToShow;
 
@@ -94,16 +82,14 @@
       document.getElementById('qatarId').textContent = qatarId || 'N/A';
     }
 
-    // QR Code link - always use email param (even if it came from studentEmail or staffEmail)
     const baseURL = "https://aishamehrban.github.io/registration-info/display-info.html";
     const qrParams = new URLSearchParams({
       fullName: fullName,
-      email: emailToShow, // Always use this
+      email: emailToShow,
       choose: chooseRaw,
       phoneNumber: phoneNumber,
       qatarId: qatarId
     });
-
     const qrLink = baseURL + "?" + qrParams.toString();
 
     new QRCode(document.getElementById("qrcode"), {
@@ -124,6 +110,8 @@
   </script>
 </body>
 </html>
+
+
 
 
 
