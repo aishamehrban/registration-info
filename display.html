@@ -16,7 +16,7 @@
     #qrcode { margin-top: 5vh; }
     #downloadBtn { margin-top: 20px; padding: 10px 20px; font-size: 16px; background: #0a1551; color: white; border: none; border-radius: 5px; cursor: pointer; }
     #downloadBtn:hover { background: #1a2a6c; }
-    @media (min-width:600px) { h2 { font-size: 28px } .info p { font-size:18px } body { padding: 40px } }
+    @media (min-width:600px) { h2 { font-size: 28px } .info p { font-size: 18px } body { padding: 40px } }
   </style>
 </head>
 <body>
@@ -65,13 +65,13 @@
     document.getElementById('email').textContent = emailToShow;
 
     const chooseElem = document.getElementById('choose');
-    chooseElem.textContent = chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) || 'N/A';
+    chooseElem.textContent = chooseRaw ? (chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1)) : 'N/A';
     if (choose === 'student') chooseElem.classList.add('student');
     else if (choose === 'alumni') chooseElem.classList.add('alumni');
     else if (choose === 'staff') chooseElem.classList.add('staff');
     else if (isFamily) chooseElem.classList.add('family');
 
-    // Build QR string with all
+    // Build the QR link with all parameters
     const base = "https://aishamehrban.github.io/registration-info/display-info.html";
     const qs = new URLSearchParams({
       fullName: fullName,
@@ -101,6 +101,8 @@
 
 </body>
 </html>
+
+
 
 
 
