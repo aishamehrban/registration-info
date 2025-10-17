@@ -94,12 +94,13 @@
 
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
   <script>
+    // Parse URL parameters
     const params = new URLSearchParams(window.location.search);
 
     const fullName = params.get('fullName') || '';
     const studentEmail = params.get('studentEmail') || '';
     const staffEmail = params.get('staffEmail') || '';
-    const familyEmail = params.get('email') || '';
+    const familyEmail = params.get('email') || '';  // family email param named 'email'
     const phoneNumber = params.get('phoneNumber') || '';
     const qatarId = params.get('qatarId') || '';
     const chooseRaw = params.get('choose') || '';
@@ -108,8 +109,9 @@
     let emailToShow = '';
     let tagClass = '';
 
-    const isFamily = choose.includes("family");
+    const isFamily = choose === "family";
 
+    // Assign emailToShow and tagClass based on category
     if (isFamily) {
       emailToShow = familyEmail;
       tagClass = 'family';
@@ -120,47 +122,53 @@
       emailToShow = staffEmail;
       tagClass = 'staff';
     } else {
+      // fallback - first available email
       emailToShow = studentEmail || staffEmail || familyEmail || '';
     }
 
-    // Display data
-    document.getElementById('fullName').textContent = fullName;
-    document.getElementById('email').textContent = emailToShow;
+    // Display the data on page
+    document.getElementById('fullName').textContent = fullName || 'N/A';
+    document.getElementById('email').textContent = emailToShow || 'N/A';
 
     const chooseElem = document.getElementById('choose');
     chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
     if (tagClass) chooseElem.classList.add(tagClass);
 
+    // Show family extra info if family
     if (isFamily) {
       document.getElementById('familyFields').style.display = 'block';
       document.getElementById('phoneNumber').textContent = phoneNumber || 'N/A';
       document.getElementById('qatarId').textContent = qatarId || 'N/A';
     }
 
-    // Generate QR code
-    const baseURL = "https://aishamehrban.github.io/registration-info/display-info.html";
+    // Generate the QR code linking to this page with the same data in params
+    // This makes the QR code open the info page for the person
+    const baseURL = window.location.origin + window.location.pathname; // current page URL without params
     const qrParams = new URLSearchParams({
       fullName: fullName,
-      email: emailToShow,
+      studentEmail: studentEmail,
+      staffEmail: staffEmail,
+      email: familyEmail,
       choose: chooseRaw,
       phoneNumber: phoneNumber,
       qatarId: qatarId
     });
     const qrLink = baseURL + "?" + qrParams.toString();
 
+    // Create QR code
     new QRCode(document.getElementById("qrcode"), {
       text: qrLink,
       width: 300,
       height: 300
     });
 
-    // Download button
+    // Download QR code image when button clicked
     document.getElementById('downloadBtn').addEventListener('click', () => {
       const canvas = document.querySelector('#qrcode canvas');
       if (canvas) {
         const link = document.createElement('a');
         link.href = canvas.toDataURL("image/png");
-        link.download = (fullName || 'QR') + '_QR.png';
+        link.download = (fullName ? fullName.replace(/\s+/g, '_') : 'QR') + '_QR.png';
         link.click();
       }
     });
@@ -168,6 +176,8 @@
 
 </body>
 </html>
+
+
 
 
 
