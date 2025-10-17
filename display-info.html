@@ -52,7 +52,6 @@
       margin-top: 5vh;
       display: flex;
       justify-content: center;
-      /* Force size to avoid zero size issue */
       width: 300px;
       height: 300px;
       margin-left: auto;
@@ -84,25 +83,41 @@
 
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
   <script>
-    // Clear previous QR if exists
-    const qrcodeContainer = document.getElementById('qrcode');
-    qrcodeContainer.innerHTML = '';
-
     const params = new URLSearchParams(window.location.search);
 
     const fullName = params.get('fullName') || '';
-    const email = params.get('email') || '';
+    // Grab all possible emails
+    const studentEmail = params.get('studentEmail') || '';
+    const staffEmail = params.get('staffEmail') || '';
+    const familyEmail = params.get('email') || '';  // for family/friends use 'email'
+    
     const chooseRaw = params.get('choose') || '';
     const choose = chooseRaw.trim().toLowerCase();
+
     const phoneNumber = params.get('phoneNumber') || '';
     const qatarId = params.get('qatarId') || '';
 
+    // Determine which email to show based on category
+    let emailToShow = '';
+    if (choose.includes('family')) {
+      emailToShow = familyEmail;
+    } else if (choose === 'student' || choose === 'alumni') {
+      emailToShow = studentEmail;
+    } else if (choose === 'staff') {
+      emailToShow = staffEmail;
+    } else {
+      // fallback
+      emailToShow = familyEmail || studentEmail || staffEmail || '';
+    }
+
+    // Display text info
     document.getElementById('fullName').textContent = fullName;
-    document.getElementById('email').textContent = email;
+    document.getElementById('email').textContent = emailToShow;
 
     const chooseElem = document.getElementById('choose');
     chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
 
+    // Add tag color class
     let tagClass = '';
     if (choose === 'student') tagClass = 'student';
     else if (choose === 'alumni') tagClass = 'alumni';
@@ -111,20 +126,46 @@
 
     if (tagClass) chooseElem.classList.add(tagClass);
 
+    // Show family extra fields if category family
     if (choose.includes('family')) {
       document.getElementById('familyFields').style.display = 'block';
       document.getElementById('phoneNumber').textContent = phoneNumber || 'N/A';
       document.getElementById('qatarId').textContent = qatarId || 'N/A';
     }
 
-    // Generate QR code based on full URL to display current page + params
+    // Prepare URL for QR code with all parameters
+    const baseURL = window.location.origin + window.location.pathname; // current page without query
+    const qrParams = new URLSearchParams({
+      fullName,
+      choose: chooseRaw,
+      phoneNumber,
+      qatarId
+    });
+
+    // Add email parameter by category
+    if (choose.includes('family')) {
+      qrParams.set('email', emailToShow);
+    } else if (choose === 'student' || choose === 'alumni') {
+      qrParams.set('studentEmail', emailToShow);
+    } else if (choose === 'staff') {
+      qrParams.set('staffEmail', emailToShow);
+    } else {
+      qrParams.set('email', emailToShow);
+    }
+
+    const qrLink = baseURL + '?' + qrParams.toString();
+
+    // Clear old QR code if any
+    const qrcodeContainer = document.getElementById('qrcode');
+    qrcodeContainer.innerHTML = '';
+
+    // Generate QR code
     new QRCode(qrcodeContainer, {
-      text: window.location.href,
+      text: qrLink,
       width: 300,
       height: 300,
       correctLevel: QRCode.CorrectLevel.H
     });
-
   </script>
 
 </body>
@@ -147,7 +188,9 @@
 
 
 
+
   
+
 
 
 
