@@ -5,7 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Generate QR Code</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; padding: 5vw; margin: 0; background-color: #f3f3fe; }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 5vw;
+      margin: 0;
+      background-color: #f3f3fe;
+    }
     h2 { color: #0a1551; font-size: 6vw; margin-bottom: 2vh; }
     p { color: #444; font-size: 4.5vw; margin: 1vh 0; }
     .info { margin-top: 4vh; font-size: 4.8vw; color: #0a1551; }
@@ -18,7 +24,11 @@
     #qrcode { margin-top: 5vh; display: flex; justify-content: center; }
     #downloadBtn { margin-top: 20px; padding: 10px 20px; font-size: 16px; font-weight: bold; background-color: #0a1551; color: white; border: none; border-radius: 5px; cursor: pointer; }
     #downloadBtn:hover { background-color: #1a2a6c; }
-    @media (min-width: 600px) { h2 { font-size: 28px; } p, .info { font-size: 18px; } body { padding: 40px; } }
+    @media (min-width: 600px) {
+      h2 { font-size: 28px; }
+      p, .info { font-size: 18px; }
+      body { padding: 40px; }
+    }
   </style>
 </head>
 <body>
@@ -53,28 +63,29 @@
     const choose = chooseRaw.trim().toLowerCase();
 
     let emailToShow = '';
-    let tagClass = '';
     const isFamily = choose.includes("family");
 
     if (isFamily) {
       emailToShow = familyEmail;
-      tagClass = 'family';
     } else if (choose === 'student' || choose === 'alumni') {
       emailToShow = studentEmail;
-      tagClass = choose;
     } else if (choose === 'staff') {
       emailToShow = staffEmail;
-      tagClass = 'staff';
     } else {
-      emailToShow = studentEmail || staffEmail || familyEmail || '';
+      // fallback
+      emailToShow = studentEmail || staffEmail || familyEmail;
     }
 
+    // Display data in page
     document.getElementById('fullName').textContent = fullName;
     document.getElementById('email').textContent = emailToShow;
 
     const chooseElem = document.getElementById('choose');
     chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
-    if (tagClass) chooseElem.classList.add(tagClass);
+    if (choose === 'student') chooseElem.classList.add('student');
+    else if (choose === 'alumni') chooseElem.classList.add('alumni');
+    else if (choose === 'staff') chooseElem.classList.add('staff');
+    else if (isFamily) chooseElem.classList.add('family');
 
     if (isFamily) {
       document.getElementById('familyFields').style.display = 'block';
@@ -82,6 +93,7 @@
       document.getElementById('qatarId').textContent = qatarId || 'N/A';
     }
 
+    // Build QR code URL
     const baseURL = "https://aishamehrban.github.io/registration-info/display-info.html";
     const qrParams = new URLSearchParams({
       fullName: fullName,
@@ -108,8 +120,11 @@
       }
     });
   </script>
+
 </body>
 </html>
+
+
 
 
 
