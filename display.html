@@ -48,83 +48,81 @@
 
   <div id="qrcode"></div>
   <button id="downloadBtn">Download QR Code</button>
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
-<script>
-  const params = new URLSearchParams(window.location.search);
 
-  // Read all possible parameters
-  const fullName = params.get('fullName') || '';
-  const studentEmail = params.get('studentEmail') || '';
-  const staffEmail = params.get('staffEmail') || '';
-  const familyEmail = params.get('email') || '';  // for family & friends
-  const phoneNumber = params.get('phoneNumber') || '';
-  const qatarId = params.get('qatarId') || '';
-  const chooseRaw = params.get('choose') || '';
-  const choose = chooseRaw.trim().toLowerCase();
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
 
-  let emailToShow = '';
-  let tagClass = '';
-  const isFamily = choose.includes("family");
+    const fullName = params.get('fullName') || '';
+    const studentEmail = params.get('studentEmail') || '';
+    const staffEmail = params.get('staffEmail') || '';
+    const familyEmail = params.get('email') || '';  // for family & friends
+    const phoneNumber = params.get('phoneNumber') || '';
+    const qatarId = params.get('qatarId') || '';
+    const chooseRaw = params.get('choose') || '';
+    const choose = chooseRaw.trim().toLowerCase();
 
-  if (isFamily) {
-    emailToShow = familyEmail;
-    tagClass = 'family';
-  } else if (choose === 'student' || choose === 'alumni') {
-    emailToShow = studentEmail;
-    tagClass = choose;
-  } else if (choose === 'staff') {
-    emailToShow = staffEmail;
-    tagClass = 'staff';
-  } else {
-    emailToShow = studentEmail || staffEmail || familyEmail || '';
-  }
+    let emailToShow = '';
+    let tagClass = '';
+    const isFamily = choose.includes("family");
 
-  // Display the info
-  document.getElementById('fullName').textContent = fullName;
-  document.getElementById('email').textContent = emailToShow;
-
-  const chooseElem = document.getElementById('choose');
-  chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
-  if (tagClass) chooseElem.classList.add(tagClass);
-
-  if (isFamily) {
-    document.getElementById('familyFields').style.display = 'block';
-    document.getElementById('phoneNumber').textContent = phoneNumber || 'N/A';
-    document.getElementById('qatarId').textContent = qatarId || 'N/A';
-  }
-
-  // ✅ FIXED: Include all necessary parameters in QR code
-  const baseURL = "https://aishamehrban.github.io/registration-info/display-info.html";
-  const qrParams = new URLSearchParams({
-    fullName: fullName,
-    email: emailToShow,
-    choose: chooseRaw,
-    phoneNumber: phoneNumber,
-    qatarId: qatarId
-  });
-  const qrLink = baseURL + "?" + qrParams.toString();
-
-  new QRCode(document.getElementById("qrcode"), {
-    text: qrLink,
-    width: 300,
-    height: 300
-  });
-
-  document.getElementById('downloadBtn').addEventListener('click', () => {
-    const canvas = document.querySelector('#qrcode canvas');
-    if (canvas) {
-      const link = document.createElement('a');
-      link.href = canvas.toDataURL("image/png");
-      link.download = `${fullName || 'QR'}_QR.png`;
-      link.click();
+    if (isFamily) {
+      emailToShow = familyEmail;
+      tagClass = 'family';
+    } else if (choose === 'student' || choose === 'alumni') {
+      emailToShow = studentEmail;
+      tagClass = choose;
+    } else if (choose === 'staff') {
+      emailToShow = staffEmail;
+      tagClass = 'staff';
+    } else {
+      emailToShow = studentEmail || staffEmail || familyEmail || '';
     }
-  });
-</script>
 
+    document.getElementById('fullName').textContent = fullName;
+    document.getElementById('email').textContent = emailToShow;
 
+    const chooseElem = document.getElementById('choose');
+    chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
+    if (tagClass) chooseElem.classList.add(tagClass);
+
+    if (isFamily) {
+      document.getElementById('familyFields').style.display = 'block';
+      document.getElementById('phoneNumber').textContent = phoneNumber || 'N/A';
+      document.getElementById('qatarId').textContent = qatarId || 'N/A';
+    }
+
+    const baseURL = "https://aishamehrban.github.io/registration-info/display-info.html";
+    const qrParams = new URLSearchParams({
+      fullName: fullName,
+      email: emailToShow,
+      choose: chooseRaw,
+      phoneNumber: phoneNumber,
+      qatarId: qatarId
+    });
+    const qrLink = baseURL + "?" + qrParams.toString();
+
+    new QRCode(document.getElementById("qrcode"), {
+      text: qrLink,
+      width: 300,
+      height: 300
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', () => {
+      const canvas = document.querySelector('#qrcode canvas');
+      if (canvas) {
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL("image/png");
+        link.download = `${fullName || 'QR'}_QR.png`;
+        link.click();
+      }
+    });
+  </script>
 
 </body>
 </html>
+
+
 
 
 
