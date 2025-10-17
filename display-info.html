@@ -77,44 +77,79 @@
 
   <div id="qrcode"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
-  <script>
-    const params = new URLSearchParams(window.location.search);
+ <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
 
-    const fullName = params.get('fullName') || '';
-    const email = params.get('email') || '';
-    const chooseRaw = params.get('choose') || '';
-    const choose = chooseRaw.trim().toLowerCase();
-    const phoneNumber = params.get('phoneNumber') || '';
-    const qatarId = params.get('qatarId') || '';
+  // Read all possible parameters
+  const fullName = params.get('fullName') || '';
+  const studentEmail = params.get('studentEmail') || '';
+  const staffEmail = params.get('staffEmail') || '';
+  const familyEmail = params.get('email') || '';  // for family & friends
+  const phoneNumber = params.get('phoneNumber') || '';
+  const qatarId = params.get('qatarId') || '';
+  const chooseRaw = params.get('choose') || '';
+  const choose = chooseRaw.trim().toLowerCase();
 
-    document.getElementById('fullName').textContent = fullName;
-    document.getElementById('email').textContent = email;
+  let emailToShow = '';
+  let tagClass = '';
+  const isFamily = choose.includes("family");
 
-    const chooseElem = document.getElementById('choose');
-    chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
+  if (isFamily) {
+    emailToShow = familyEmail;
+    tagClass = 'family';
+  } else if (choose === 'student' || choose === 'alumni') {
+    emailToShow = studentEmail;
+    tagClass = choose;
+  } else if (choose === 'staff') {
+    emailToShow = staffEmail;
+    tagClass = 'staff';
+  } else {
+    emailToShow = studentEmail || staffEmail || familyEmail || '';
+  }
 
-    let tagClass = '';
-    if (choose === 'student') tagClass = 'student';
-    else if (choose === 'alumni') tagClass = 'alumni';
-    else if (choose === 'staff') tagClass = 'staff';
-    else if (choose.includes('family')) tagClass = 'family';
+  // Display the info
+  document.getElementById('fullName').textContent = fullName;
+  document.getElementById('email').textContent = emailToShow;
 
-    if (tagClass) chooseElem.classList.add(tagClass);
+  const chooseElem = document.getElementById('choose');
+  chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
+  if (tagClass) chooseElem.classList.add(tagClass);
 
-    if (choose.includes('family')) {
-      document.getElementById('familyFields').style.display = 'block';
-      document.getElementById('phoneNumber').textContent = phoneNumber || 'N/A';
-      document.getElementById('qatarId').textContent = qatarId || 'N/A';
+  if (isFamily) {
+    document.getElementById('familyFields').style.display = 'block';
+    document.getElementById('phoneNumber').textContent = phoneNumber || 'N/A';
+    document.getElementById('qatarId').textContent = qatarId || 'N/A';
+  }
+
+  // ✅ FIXED: Include all necessary parameters in QR code
+  const baseURL = "https://aishamehrban.github.io/registration-info/display-info.html";
+  const qrParams = new URLSearchParams({
+    fullName: fullName,
+    email: emailToShow,
+    choose: chooseRaw,
+    phoneNumber: phoneNumber,
+    qatarId: qatarId
+  });
+  const qrLink = baseURL + "?" + qrParams.toString();
+
+  new QRCode(document.getElementById("qrcode"), {
+    text: qrLink,
+    width: 300,
+    height: 300
+  });
+
+  document.getElementById('downloadBtn').addEventListener('click', () => {
+    const canvas = document.querySelector('#qrcode canvas');
+    if (canvas) {
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL("image/png");
+      link.download = `${fullName || 'QR'}_QR.png`;
+      link.click();
     }
+  });
+</script>
 
-    // regenerate QR of current URL
-    new QRCode(document.getElementById('qrcode'), {
-      text: window.location.href,
-      width: 300,
-      height: 300
-    });
-  </script>
 
 </body>
 </html>
@@ -129,6 +164,7 @@
 
 
   
+
 
 
 
