@@ -12,21 +12,25 @@
       margin: 0;
       background-color: #f3f3fe;
     }
+
     h2 {
       color: #0a1551;
       font-size: 6vw;
       margin-bottom: 2vh;
     }
+
     p {
       color: #444;
       font-size: 4.5vw;
       margin: 1vh 0;
     }
+
     .info {
       margin-top: 4vh;
       font-size: 4.8vw;
       color: #0a1551;
     }
+
     .tag {
       display: inline-block;
       padding: 6px 12px;
@@ -35,10 +39,12 @@
       color: white;
       margin-top: 8px;
     }
+
     .student { background-color: #007bff; }
-    .alumni { background-color: #ff7a00; }
-    .staff { background-color: #28a745; }
-    .family { background-color: #c63dc6; }
+    .alumni  { background-color: #ff7a00; }
+    .staff   { background-color: #28a745; }
+    .family  { background-color: #c63dc6; }
+
     .subtag {
       display: inline-block;
       padding: 4px 10px;
@@ -48,11 +54,13 @@
       color: white;
       background-color: #6c757d;
     }
+
     #qrcode {
       margin-top: 5vh;
       display: flex;
       justify-content: center;
     }
+
     @media (min-width: 600px) {
       h2 { font-size: 28px; }
       p, .info { font-size: 18px; }
@@ -80,6 +88,7 @@
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
   <script>
     const params = new URLSearchParams(window.location.search);
+
     const fullName = params.get('fullName') || '';
     const email = params.get('email') || '';
     const chooseRaw = params.get('choose') || '';
@@ -87,16 +96,20 @@
     const phoneNumber = params.get('phoneNumber') || '';
     const qatarId = params.get('qatarId') || '';
 
+    // Fill data into page
     document.getElementById('fullName').textContent = fullName;
     document.getElementById('email').textContent = email;
 
     const chooseElem = document.getElementById('choose');
-    chooseElem.textContent = chooseRaw ? (chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1)) : 'N/A';
+    chooseElem.textContent = chooseRaw ? chooseRaw.charAt(0).toUpperCase() + chooseRaw.slice(1) : 'N/A';
 
-    if (choose === 'student') chooseElem.classList.add('student');
-    else if (choose === 'alumni') chooseElem.classList.add('alumni');
-    else if (choose === 'staff') chooseElem.classList.add('staff');
-    else if (choose.includes('family')) chooseElem.classList.add('family');
+    let tagClass = '';
+    if (choose === 'student')       tagClass = 'student';
+    else if (choose === 'alumni')   tagClass = 'alumni';
+    else if (choose === 'staff')    tagClass = 'staff';
+    else if (choose.includes('family')) tagClass = 'family';
+
+    if (tagClass) chooseElem.classList.add(tagClass);
 
     if (choose.includes('family')) {
       document.getElementById('familyFields').style.display = 'block';
@@ -104,6 +117,7 @@
       document.getElementById('qatarId').textContent = qatarId || 'N/A';
     }
 
+    // Generate QR code of current URL
     new QRCode(document.getElementById('qrcode'), {
       text: window.location.href,
       width: 300,
@@ -128,7 +142,9 @@
 
 
 
+
   
+
 
 
 
