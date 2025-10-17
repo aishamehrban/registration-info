@@ -56,7 +56,7 @@
     const fullName = params.get('fullName') || '';
     const studentEmail = params.get('studentEmail') || '';
     const staffEmail = params.get('staffEmail') || '';
-    const familyEmail = params.get('email') || '';  // for family & friends
+    const familyEmail = params.get('email') || '';
     const phoneNumber = params.get('phoneNumber') || '';
     const qatarId = params.get('qatarId') || '';
     const chooseRaw = params.get('choose') || '';
@@ -66,6 +66,7 @@
     let tagClass = '';
     const isFamily = choose.includes("family");
 
+    // Always use "email" as final param to be passed to QR
     if (isFamily) {
       emailToShow = familyEmail;
       tagClass = 'family';
@@ -79,6 +80,7 @@
       emailToShow = studentEmail || staffEmail || familyEmail || '';
     }
 
+    // Display info
     document.getElementById('fullName').textContent = fullName;
     document.getElementById('email').textContent = emailToShow;
 
@@ -92,14 +94,16 @@
       document.getElementById('qatarId').textContent = qatarId || 'N/A';
     }
 
+    // QR Code link - always use email param (even if it came from studentEmail or staffEmail)
     const baseURL = "https://aishamehrban.github.io/registration-info/display-info.html";
     const qrParams = new URLSearchParams({
       fullName: fullName,
-      email: emailToShow,
+      email: emailToShow, // Always use this
       choose: chooseRaw,
       phoneNumber: phoneNumber,
       qatarId: qatarId
     });
+
     const qrLink = baseURL + "?" + qrParams.toString();
 
     new QRCode(document.getElementById("qrcode"), {
@@ -118,24 +122,8 @@
       }
     });
   </script>
-
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
