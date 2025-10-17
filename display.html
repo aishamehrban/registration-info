@@ -5,18 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Generate QR Code</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; padding: 5vw; background: #f3f3fe; margin: 0; }
-    h2 { color: #0a1551; font-size: 6vw; margin-bottom: 2vh; }
-    .info p { color: #444; font-size: 4.5vw; margin: 1vh 0; }
-    .tag { display: inline-block; padding: 6px 12px; border-radius: 12px; font-weight: bold; color: white; margin-top: 8px; }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 5vw;
+      background: #f3f3fe;
+      margin: 0;
+    }
+    h2 {
+      color: #0a1551;
+      font-size: 6vw;
+      margin-bottom: 2vh;
+    }
+    .info p {
+      color: #444;
+      font-size: 4.5vw;
+      margin: 1vh 0;
+    }
+    .tag {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-weight: bold;
+      color: white;
+      margin-top: 8px;
+    }
     .student { background-color: #007bff; }
     .alumni { background-color: #ff7a00; }
     .staff { background-color: #28a745; }
     .family { background-color: #c63dc6; }
-    #qrcode { margin-top: 5vh; }
-    #downloadBtn { margin-top: 20px; padding: 10px 20px; font-size: 16px; background: #0a1551; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    #downloadBtn:hover { background: #1a2a6c; }
-    @media (min-width:600px) { h2 { font-size: 28px } .info p { font-size: 18px } body { padding: 40px } }
+    #qrcode {
+      margin-top: 5vh;
+    }
+    #downloadBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #0a1551;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #downloadBtn:hover {
+      background: #1a2a6c;
+    }
+    @media (min-width: 600px) {
+      h2 { font-size: 28px; }
+      .info p { font-size: 18px; }
+      body { padding: 40px; }
+    }
   </style>
 </head>
 <body>
@@ -26,7 +64,7 @@
     <p><strong>Full Name:</strong> <span id="fullName"></span></p>
     <p><strong>Email:</strong> <span id="email"></span></p>
     <p><strong>Category:</strong> <span id="choose" class="tag"></span></p>
-    <div id="familyFields" style="display:none;">
+    <div id="familyFields" style="display: none;">
       <p><strong>Phone Number:</strong> <span id="phoneNumber"></span></p>
       <p><strong>Qatar ID:</strong> <span id="qatarId"></span></p>
     </div>
@@ -37,14 +75,14 @@
 
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
   <script>
-    const p = new URLSearchParams(window.location.search);
-    const fullName = p.get('fullName') || '';
-    const studentEmail = p.get('studentEmail') || '';
-    const staffEmail = p.get('staffEmail') || '';
-    const familyEmail = p.get('email') || '';
-    const phoneNumber = p.get('phoneNumber') || '';
-    const qatarId = p.get('qatarId') || '';
-    const chooseRaw = p.get('choose') || '';
+    const params = new URLSearchParams(window.location.search);
+    const fullName = params.get('fullName') || '';
+    const studentEmail = params.get('studentEmail') || '';
+    const staffEmail = params.get('staffEmail') || '';
+    const familyEmail = params.get('email') || '';
+    const phoneNumber = params.get('phoneNumber') || '';
+    const qatarId = params.get('qatarId') || '';
+    const chooseRaw = params.get('choose') || '';
     const choose = chooseRaw.trim().toLowerCase();
 
     let emailToShow = '';
@@ -71,16 +109,16 @@
     else if (choose === 'staff') chooseElem.classList.add('staff');
     else if (isFamily) chooseElem.classList.add('family');
 
-    // Build the QR link with all parameters
+    // Build QR code URL
     const base = "https://aishamehrban.github.io/registration-info/display-info.html";
-    const qs = new URLSearchParams({
+    const qrParams = new URLSearchParams({
       fullName: fullName,
       email: emailToShow,
       choose: chooseRaw,
       phoneNumber: phoneNumber,
       qatarId: qatarId
     });
-    const qrLink = base + "?" + qs.toString();
+    const qrLink = base + "?" + qrParams.toString();
 
     new QRCode(document.getElementById('qrcode'), {
       text: qrLink,
@@ -101,6 +139,8 @@
 
 </body>
 </html>
+
+
 
 
 
